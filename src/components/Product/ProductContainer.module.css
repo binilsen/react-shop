@@ -1,0 +1,14 @@
+.product-container {
+  border: 1px solid #382b47;
+  box-shadow: 8px 5px 8px #382b47;
+  border-radius: 4px;
+  color: #382b47;
+  background-color: #fdf7ff;
+  margin-bottom: 200px;
+  overflow: auto;
+}
+.scroller {
+  max-height: 500px;
+  overflow: auto;
+  padding: 0px 20px;
+}
