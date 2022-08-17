@@ -5,34 +5,32 @@ const ProductList = (props) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
-
-  const [token, setToken] = useState(props.token);
   const resetState = () => {
     setError(null);
     setLoading(true);
     setProducts([]);
   };
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async (token) => {
     resetState();
     fetch("http://127.0.0.1:3000/api/v1/products", {
       headers: {
-        Authorization: token
-      }
+        Authorization: token,
+      },
     })
       .then((res) => {
-        if (res.status != 200) setError('Error');
-        return res.json()
+        if (res.status != 200) setError("Error");
+        return res.json();
       })
-      .then((data) => { setProducts(data);  console.log(data);})
+      .then((data) => {
+        setProducts(data);
+      })
       .catch((error) => setError("unable to connect."))
       .finally((cleanup) => setLoading(false));
-  }, [token]);
+  }, []);
 
   useEffect(() => {
-    setToken(props.token);
-    resetState();
-    fetchProducts();
-  }, [props.token, fetchProducts]);
+    fetchProducts(props.token);
+  }, [props.token]);
 
   return (
     <>
@@ -46,7 +44,9 @@ const ProductList = (props) => {
           Loading Products....
         </h1>
       )}
-      {!isLoading && !error && <ProductContainer products={products} />}
+      {!isLoading && !error && products && (
+        <ProductContainer products={products} />
+      )}
     </>
   );
 };
