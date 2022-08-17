@@ -2,15 +2,16 @@ import { useRef, useState } from "react";
 import Input from "../UI/Input";
 
 const TokenForm = (props) => {
-  const [isTokenValid, setisTokenValid] = useState(false);
+  const [isTokenValid, setisTokenValid] = useState(true);
   const btnStyle = isTokenValid ? "" : "disabled";
-  const error = <small className="px-1 text-capitalize text-danger">invalid token!</small>;
+  const error = (
+    <small className="px-1 text-capitalize text-danger">invalid token!</small>
+  );
   const tokenRef = useRef();
   const formHandler = (event) => {
     event.preventDefault();
     props.onTokenSubmit(tokenRef.current.value);
     tokenRef.current.value = "";
-    setisTokenValid(false);
   };
   const ontokenChange = () => {
     if (tokenRef.current.value.length > 100) setisTokenValid(true);
