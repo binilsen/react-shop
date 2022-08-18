@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Input from "../UI/Input";
 
 const TokenForm = (props) => {
   const [isTokenValid, setisTokenValid] = useState(true);
-  const btnStyle = isTokenValid ? "" : "disabled";
-  const error = (
+  var btnStyle = isTokenValid ? "" : "disabled";
+  var error = (
     <small className="px-1 text-capitalize text-danger">invalid token!</small>
   );
   const tokenRef = useRef();
@@ -14,10 +14,13 @@ const TokenForm = (props) => {
     tokenRef.current.value = "";
   };
   const ontokenChange = () => {
-    if (tokenRef.current.value.length > 100) setisTokenValid(true);
+    if (tokenRef.current.value.length > 10) setisTokenValid(true);
     else setisTokenValid(false);
     return;
   };
+  useEffect(() => {
+    error = "";
+  }, []);
   return (
     <>
       <div className="row m-3 justify-content-center">

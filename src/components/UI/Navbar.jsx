@@ -14,6 +14,9 @@ const Navbar = () => {
             <Link to="user" className="btn btn-dark btn-lg">
               Token
             </Link>
+            <Link to="profile" className=" mx-2 btn btn-dark btn-lg">
+              Profile
+            </Link>
           </div>
         </div>
       </div>
