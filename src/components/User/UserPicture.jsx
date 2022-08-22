@@ -1,14 +1,13 @@
 import styles from "./UserPicture.module.css";
-import { useState, useEffect } from "react";
-import userDefault from "./../../assets/user.svg";
+import { useState, useEffect, useContext } from "react";
+import AuthContext from "./../../store/auth-context";
 const UserPicture = () => {
+  const authCtx = useContext(AuthContext);
   const [isEditClicked, setisEditClicked] = useState(false);
   const inputStyle = isEditClicked ? styles.show : styles.hidden;
   const [newUserImage, setNewUserImage] = useState(null);
-  const [userImage, setUserImage] = useState(userDefault);
-  const token =
-    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsInNjcCI6InVzZXIiLCJhdWQiOm51bGwsImlhdCI6MTY2MDgxODgxOSwiZXhwIjoxNjYwODIyNDE5LCJqdGkiOiJjMDExNTAyNC0yNjg2LTRlYWUtODNhOC0wZWJjNDgzZWJmYmYifQ.A1EMb21nBZoE4ujC1-oiCku1ckiE8eBLy1z8ap7poO4";
-
+  const [userImage, setUserImage] = useState(authCtx.userImage);
+  const token = localStorage.getItem("token");
   const formHandler = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -20,25 +19,16 @@ const UserPicture = () => {
       body: formData,
       method: "PUT",
     });
-    if (response.status == 200) setUserImage(URL.createObjectURL(newUserImage));
+    if (response.ok) {
+      authCtx.userImage = URL.createObjectURL(newUserImage);
+      setUserImage(URL.createObjectURL(newUserImage));
+    }
     event.target.value = "";
     setisEditClicked(false);
   };
   const handleChange = (event) => {
     setNewUserImage(event.target.files[0]);
   };
-  const fetchImage = async () => {
-    const response = await fetch("http://127.0.0.1:3000/users/sign_in", {
-      headers: {
-        Authorization: token,
-      },
-    });
-    const data = await response.json();
-    if (response.status == 200 && data.image) setUserImage(data.image);
-  };
-  useEffect(() => {
-    fetchImage();
-  }, []);
   return (
     <div className="row m-5 justify-content-center">
       <div className={`col-sm-6  shadow p-3 ${styles["profile-banner"]}`}>
@@ -47,18 +37,22 @@ const UserPicture = () => {
             {userImage && (
               <img
                 src={userImage}
-                className="img p-2 shadow-lg rounded"
-                width="100px"
+                className="img img-thumbnail  shadow-lg rounded"
+                width="160px"
                 height="150px"
               />
             )}
-            {!userImage && <h1>Loading.....</h1>}
           </div>
           <div className="text-center p-3">
             <form action="#" onSubmit={formHandler}>
               <div className="my-2 d-flex justify-content-center">
+                <label htmlFor="image" hidden>
+                  Select image
+                </label>
                 <input
+                  accept="image/*"
                   type="file"
+                  typeof="image"
                   className={`  form-control w-75 ${inputStyle}`}
                   onChange={handleChange}
                 />

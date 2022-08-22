@@ -10,13 +10,10 @@ const ProductList = (props) => {
     setLoading(true);
     setProducts([]);
   };
-  const fetchProducts = useCallback(async (token) => {
+
+  useEffect(() => {
     resetState();
-    fetch("http://127.0.0.1:3000/api/v1/products", {
-      headers: {
-        Authorization: token,
-      },
-    })
+    fetch("http://127.0.0.1:3000/api/v1/products", {})
       .then((res) => {
         if (res.status != 200) setError("Error");
         return res.json();
@@ -27,10 +24,6 @@ const ProductList = (props) => {
       .catch((error) => setError("unable to connect."))
       .finally((cleanup) => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    fetchProducts(props.token);
-  }, [props.token]);
 
   return (
     <>

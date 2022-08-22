@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
 
-const Input =forwardRef( (props,ref) => {
+const Input = forwardRef((props, ref) => {
   return (
-    <div className="form-floating my-1">
+    <div className="form-floating my-3">
       <input
         type={props.type}
         name={props.name}
@@ -12,8 +12,9 @@ const Input =forwardRef( (props,ref) => {
         onChange={props.onChange}
       />
       <label className="text-capitalize" htmlFor={props.name}>
-        {props.name}
+        {props.placeholder}
       </label>
+      <div className="invalid-feedback">{props.error}</div>
     </div>
   );
 });

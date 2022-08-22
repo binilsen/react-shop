@@ -1,30 +1,21 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Toggle from "../UI/Toggle";
-import UserLogin from "./UserForm";
-import Token from "./Token";
+import UserLogin from "./UserLogin";
+import UserRegister from "./UserRegister";
 const User = () => {
-  const [isLoggedin, setisLoggedin] = useState(false);
-  const formHandler = (user) => {
-    console.log(user);
-    setisLoggedin(true);
+  const [isLogin, setIsLogin] = useState();
+  const toggleHandler = (value) => {
+    setIsLogin(value);
   };
   return (
     <>
-      <Toggle />
+      <Toggle onToggle={toggleHandler} />
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-sm-6 bg-light shadow rounded">
             <div className="d-flex h-100 p-2 flex-column  justify-content-center">
-              {!isLoggedin && <UserLogin onFormSubmit={formHandler} />}
-              {isLoggedin && <Token token="hello here is the token" />}
-              {isLoggedin && (
-                <button
-                  className="btn btn-outline-dark"
-                  onClick={() => setisLoggedin(false)}
-                >
-                  Close
-                </button>
-              )}
+              {isLogin && <UserLogin />}
+              {!isLogin && <UserRegister />}
             </div>
           </div>
         </div>
