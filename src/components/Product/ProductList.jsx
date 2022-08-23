@@ -33,7 +33,7 @@ const ProductList = (props) => {
         </h1>
       )}
       {isLoading && (
-        <h1 className="text-center alert alert-info   texmy-3 w-50 mx-auto border rounded p-2">
+        <h1 className="text-center alert alert-info my-3 w-50 mx-auto border rounded p-2">
           Loading Products....
         </h1>
       )}

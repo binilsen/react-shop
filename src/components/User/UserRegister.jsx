@@ -40,7 +40,7 @@ const UserRegister = () => {
             token: response.headers.get("Authorization"),
             username: content.email,
           });
-          authCtx.setStatus("Registration Successfull.");
+          authCtx.setStatus("Registration Successful.");
           formRef.current.reset();
           return navigate("/profile", { replace: true });
         }
