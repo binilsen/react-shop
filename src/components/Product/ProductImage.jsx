@@ -1,5 +1,5 @@
 import { useState } from "react";
-import noImage from "./../../assets/image.svg";
+import noImage from "./../../assets/loadingImage.svg";
 const ProductImage = (props) => {
   const [isLoading, setLoading] = useState(true);
   const style = isLoading ? "d-none" : "img img-thumbnail w-50";

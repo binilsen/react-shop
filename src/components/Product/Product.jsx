@@ -7,10 +7,12 @@ const Product = (props) => {
       <div className={`row p-2 my-2 ${styles.product} align-items-center`}>
         <div className="col-sm-3">
           {<ProductImage image={props.product.thumbnail} />}
-          <p className="lead px-1">{props.product.name}</p>
         </div>
         <div className="col-sm-5">
-          <p className={`${styles['text-justify']} small`}>{props.product.title + "..."}</p>
+          <h1 className="fs-4 mb-3">{props.product.name}</h1>
+          <p className={`${styles["text-justify"]} small`}>
+            {props.product.title + "..."}
+          </p>
         </div>
         <div className="col-sm-4">
           <div className="row">

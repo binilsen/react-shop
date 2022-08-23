@@ -1,0 +1,11 @@
+.profile-banner {
+  background-color: #fdf7ff;
+  color: #6c0dff;
+  border-radius: 8px;
+}
+.hidden {
+  opacity: 0;
+}
+.show {
+  opacity: 1;
+}

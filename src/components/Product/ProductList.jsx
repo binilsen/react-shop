@@ -10,13 +10,10 @@ const ProductList = (props) => {
     setLoading(true);
     setProducts([]);
   };
-  const fetchProducts = useCallback(async (token) => {
+
+  useEffect(() => {
     resetState();
-    fetch("http://127.0.0.1:3000/api/v1/products", {
-      headers: {
-        Authorization: token,
-      },
-    })
+    fetch("http://127.0.0.1:3000/api/v1/products", {})
       .then((res) => {
         if (res.status != 200) setError("Error");
         return res.json();
@@ -28,10 +25,6 @@ const ProductList = (props) => {
       .finally((cleanup) => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    fetchProducts(props.token);
-  }, [props.token]);
-
   return (
     <>
       {error && !isLoading && (
@@ -40,7 +33,7 @@ const ProductList = (props) => {
         </h1>
       )}
       {isLoading && (
-        <h1 className="text-center alert alert-info   texmy-3 w-50 mx-auto border rounded p-2">
+        <h1 className="text-center alert alert-info my-3 w-50 mx-auto border rounded p-2">
           Loading Products....
         </h1>
       )}
