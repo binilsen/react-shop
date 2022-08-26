@@ -4,11 +4,12 @@
   border-radius: 4px;
   color: #382b47;
   background-color: #fdf7ff;
-  margin-bottom: 200px;
-  overflow: auto;
+  margin-top: 50px;
+  margin-bottom: 100px;
+  display: flex;
+  flex-flow: row wrap;
 }
-.scroller {
-  max-height: 800px;
+/* .scroller {
   overflow: auto;
   padding: 0px 20px;
-}
+} */

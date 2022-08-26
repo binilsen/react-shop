@@ -1,16 +1,16 @@
-import { useState } from "react";
-import Toggle from "../UI/Toggle";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import UserLogin from "./UserLogin";
 import UserRegister from "./UserRegister";
 const User = () => {
-  const [isLogin, setIsLogin] = useState();
-  const toggleHandler = (value) => {
-    setIsLogin(value);
-  };
+  const userNavigate = useParams();
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    userNavigate.page === "login" ? setIsLogin(true) : setIsLogin(false);
+  }, [userNavigate]);
   return (
     <>
-      <Toggle onToggle={toggleHandler} />
-      <div className="container">
+      <div className="container my-4">
         <div className="row justify-content-center">
           <div className="col-sm-6 bg-light shadow rounded">
             <div className="d-flex h-100 p-2 flex-column  justify-content-center">

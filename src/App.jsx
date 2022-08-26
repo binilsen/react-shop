@@ -1,59 +1,75 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
-import User from "./components/User/User";
-import Profile from "./components/User/Profile";
+import "bootstrap/dist/js/bootstrap";
+import * as Component from "./components/ComponentExporter";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import ProductList from "./components/Product/ProductList";
-import AuthFilter from "./components/Utilites/AuthFilter";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import AuthContext from "./store/auth-context";
-import Header from "./components/UI/Header";
-import StatusBar from "./components/UI/StatusBar";
+import Cookies from "js-cookie";
+import { CartContextProvider } from "./store/cart-context";
 
 function App() {
-  const authToken = localStorage.getItem("token");
+  const authToken = Cookies.get("authToken");
   const authCtx = useContext(AuthContext);
-  const checkLogin = async () => {
-    await fetch("http://127.0.0.1:3000/users/sign_in", {
+  const checkLogin = useCallback(async () => {
+    if (!authToken) return;
+    const response = await fetch("http://127.0.0.1:3000/api/users/sign_in", {
       method: "POST",
       headers: {
         Authorization: authToken,
       },
-    })
-      .then((response) => {
-        let data = response.json();
-        if (response.ok) {
-          data.then((content) => {
-            authCtx.onLogin({
-              token: response.headers.get("Authorization"),
-              userImage: content.image,
-              username: content.username,
-            });
-          });
-        } else authCtx.onLogout;
-      })
-      .catch((e) => e);
-  };
+    });
+    let data = response.json();
+    if (response.ok) {
+      data.then((content) => {
+        authCtx.onLogin({
+          token: response.headers.get("Authorization"),
+          userImage: content.image,
+          username: content.email,
+          id: content.id,
+          cart: content.cart,
+        });
+      });
+    } else authCtx.onLogout();
+  }, []);
   useEffect(() => {
     checkLogin();
-  }, [authToken]);
+  }, [checkLogin]);
   return (
     <BrowserRouter>
-      <Header />
-      <StatusBar/>
-      <Routes>
-        <Route path="/" element={<ProductList />} />
-        <Route path="user" element={<User />} />
-        <Route
-          path="profile"
-          element={
-            <AuthFilter>
-              <Profile />
-            </AuthFilter>
-          }
-        />
-        <Route path="*" element={<Navigate replace to="/" />} />
-      </Routes>
+      <Component.Header />
+      <CartContextProvider>
+        <Routes>
+          <Route path="/" element={<Component.ProductList />} />
+          <Route path="cart" element={<Component.Cart />} />
+          <Route path="user/:page" element={<Component.User />} />
+          <Route
+            path="/users/:userid"
+            element={
+              <Component.AuthFilter>
+                <Component.Profile />
+              </Component.AuthFilter>
+            }
+          />
+          <Route
+            path="/users/:id/orders"
+            element={
+              <Component.AuthFilter>
+                <Component.UserOrders />
+              </Component.AuthFilter>
+            }
+          />
+          <Route
+            path="/users/:id/orders/:orderId"
+            element={
+              <Component.AuthFilter>
+                <Component.Order />
+              </Component.AuthFilter>
+            }
+          />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+      </CartContextProvider>
     </BrowserRouter>
   );
 }

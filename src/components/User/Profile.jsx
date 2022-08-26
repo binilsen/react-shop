@@ -1,12 +1,8 @@
-import { useContext } from "react";
-import AuthContext from "../../store/auth-context";
-import UserPicture from "./UserPicture";
+import UserCard from "./UserCard";
 const Profile = () => {
-  const authCtx = useContext(AuthContext);
   return (
     <>
-      <h1>Welcome {authCtx.username} </h1>
-      <UserPicture />
+      <UserCard />
     </>
   );
 };

@@ -29,7 +29,7 @@ const UserRegister = () => {
       "user[password_confirmation]",
       confirmPasswordRef.current.value
     );
-    await fetch("http://127.0.0.1:3000/users", {
+    await fetch("http://127.0.0.1:3000/api/users", {
       method: "POST",
       body: formData,
     }).then((response) => {

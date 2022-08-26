@@ -2,9 +2,11 @@ import { useContext, useRef, useState } from "react";
 import Input from "../UI/Input";
 import AuthContext from "./../../store/auth-context";
 import { useNavigate } from "react-router-dom";
+import CartContext from "../../store/cart-context";
 const UserForm = () => {
   let navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  const cartCtx = useContext(CartContext);
   const [formError, setFormError] = useState(false);
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -32,21 +34,23 @@ const UserForm = () => {
     const formData = new FormData();
     formData.append("user[email]", emailRef.current.value);
     formData.append("user[password]", passwordRef.current.value);
-    await fetch("http://127.0.0.1:3000/users/sign_in", {
+    await fetch("http://127.0.0.1:3000/api/users/sign_in", {
       method: "POST",
       body: formData,
     }).then((response) => {
       let data = response.json();
       if (response.ok) {
         data.then((content) => {
-          console.log(content.image);
+          console.log(response.headers.get("authorization"));
           authCtx.onLogin({
-            token: response.headers.get("Authorization"),
+            token: response.headers.get("authorization"),
             userImage: content.image,
-            username: content.username,
+            username: content.email,
+            id: content.id,
           });
+          cartCtx.cartUpdate(content.cart);
           authCtx.setStatus("Successfully logged in.");
-          return navigate("/profile", { replace: true });
+          return navigate(`/users/${authCtx.userId}`, { replace: true });
         });
       }
       data.then((e) => setFormError(e.error));

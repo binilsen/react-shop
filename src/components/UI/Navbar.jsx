@@ -1,44 +1,91 @@
-import styles from "./Navbar.module.css";
-import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import AuthContext from "../../store/auth-context";
+import Cookies from "js-cookie";
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
-  const isLoginValid = localStorage.getItem("login_valid");
+  const navigate = useNavigate();
+  const logoutHandler = async () => {
+    const response = await fetch("http://127.0.0.1:3000/api/users/sign_out", {
+      method: "DELETE",
+      headers: {
+        authorization: Cookies.get("authToken"),
+      },
+    });
+    if (response.ok) {
+      authCtx.setStatus("Logged out successfully");
+      authCtx.onLogout();
+      return navigate("/", { replace: true });
+    }
+    authCtx.setStatus("Error occurred");
+  };
+  const isLoginValid = Cookies.get("authToken") || authCtx.isLoggedIn;
   return (
-    <div className={`p-3 mb-3 ${styles.nav}  rounded shadow-lg`}>
-      <div className="row align-items-center">
-        <div className="col-sm-6">
-          <Link to="/" className="text-reset">
-            <h1 className="display-3">React Shop</h1>
+    <>
+      <nav className="navbar navbar-expand-sm navbar-light shadow p-3 bg-light">
+        <div className="container">
+          <Link to="/" className="navbar-brand">
+            Rails Shop
           </Link>
-        </div>
-        <div className="col-sm-6">
-          <div className="d-flex justify-content-md-end">
-            {!isLoginValid && (
-              <Link to="user" className="btn btn-dark btn-lg">
-                Account
-              </Link>
-            )}
-            {isLoginValid && (
-              <button
-                onClick={authCtx.onLogout}
-                className=" mx-2 btn btn-dark btn-lg"
-              >
-                Logout
-              </button>
-            )}
-            {isLoginValid && (
-              <button className=" mx-2 btn btn-dark btn-lg">
-                <Link to="profile" className="text-reset text-decoration-none">
-                  Profile
+          <button
+            className="navbar-toggler d-lg-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="collapsibleNavId">
+            <ul className="navbar-nav ms-auto mt-2 mt-lg-0 fw-bold">
+              <li className="nav-item">
+                <Link to="/" className="nav-link">
+                  Home
                 </Link>
-              </button>
-            )}
+              </li>
+              {isLoginValid && (
+                <li className="nav-item">
+                  <Link to="cart" className="nav-link">
+                    Cart
+                  </Link>
+                </li>
+              )}
+
+              {isLoginValid && (
+                <li className="nav-item">
+                  <Link to={`/users/${authCtx.userId}`} className="nav-link">
+                    My Account
+                  </Link>
+                </li>
+              )}
+              {isLoginValid && (
+                <li className="nav-item">
+                  <button onClick={logoutHandler} className="btn btn-danger">
+                    Logout
+                  </button>
+                </li>
+              )}
+              {!isLoginValid && (
+                <li className="nav-item">
+                  <Link to="/user/register" className="nav-link">
+                    Register
+                  </Link>
+                </li>
+              )}
+              {!isLoginValid && (
+                <li className="nav-item">
+                  <Link to="/user/login" className="nav-link">
+                    Login
+                  </Link>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
-      </div>
-    </div>
+      </nav>
+    </>
   );
 };
 
