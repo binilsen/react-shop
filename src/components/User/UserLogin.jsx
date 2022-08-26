@@ -1,34 +1,30 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import Input from "../UI/Input";
+import addValidationClass from "./../Utilites/Validation";
 import AuthContext from "./../../store/auth-context";
 import { useNavigate } from "react-router-dom";
 const UserForm = () => {
   let navigate = useNavigate();
   const authCtx = useContext(AuthContext);
-  const [formError, setFormError] = useState(false);
   const emailRef = useRef();
   const passwordRef = useRef();
   var [isPasswordValid, isEmailValid] = [false, false];
   const emailChangeHandler = () => {
-    if (emailRef.current.value != "" && emailRef.current.validity.valid) {
-      emailRef.current.classList.add("is-valid");
-      emailRef.current.classList.remove("is-invalid");
-      isEmailValid = true;
-    } else emailRef.current.classList.add("is-invalid");
+    if (emailRef.current.value != "" && emailRef.current.validity.valid)
+      isEmailValid = addValidationClass(emailRef);
+    else isEmailValid = addValidationClass(emailRef, false);
   };
   const passwordChangeHandler = () => {
-    if (passwordRef.current.value.length >= 6) {
-      passwordRef.current.classList.add("is-valid");
-      passwordRef.current.classList.remove("is-invalid");
-      isPasswordValid = true;
-    } else passwordRef.current.classList.add("is-invalid");
+    if (passwordRef.current.value.length >= 6)
+      isPasswordValid = addValidationClass(passwordRef);
+    else isPasswordValid = addValidationClass(passwordRef, false);
   };
   const formHandler = async (event) => {
     event.preventDefault();
     passwordChangeHandler();
     emailChangeHandler();
     const formValidity = isEmailValid && isPasswordValid;
-    if (!formValidity) return setFormError("Invalid form entry");
+    if (!formValidity) return authCtx.setStatus("Invalid form entry");
     const formData = new FormData();
     formData.append("user[email]", emailRef.current.value);
     formData.append("user[password]", passwordRef.current.value);
@@ -39,7 +35,6 @@ const UserForm = () => {
       let data = response.json();
       if (response.ok) {
         data.then((content) => {
-          console.log(content.image);
           authCtx.onLogin({
             token: response.headers.get("Authorization"),
             userImage: content.image,
@@ -49,17 +44,12 @@ const UserForm = () => {
           return navigate("/profile", { replace: true });
         });
       }
-      data.then((e) => setFormError(e.error));
+      data.then((e) => authCtx.setStatus(e.error));
     });
   };
   return (
     <>
       <h2 className="text-center">Login</h2>
-      {formError && (
-        <div className="alert text-center fw-bold text-capitalize alert-danger">
-          {formError}
-        </div>
-      )}
       <form action="#" onSubmit={formHandler} noValidate>
         <Input
           name="email"

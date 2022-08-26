@@ -28,13 +28,12 @@ export const AuthContextProvider = (props) => {
     setStatus(message);
     setTimeout(() => {
       setStatus(null);
-    }, 2000);
+    }, 1000);
   };
   const logoutHandler = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("login_valid");
     setLoggedIn(false);
-    statusSetter("Logged out successfully");
   };
   return (
     <AuthContext.Provider
