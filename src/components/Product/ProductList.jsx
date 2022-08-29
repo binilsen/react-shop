@@ -1,19 +1,12 @@
 import ProductContainer from "./ProductContainer";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const ProductList = (props) => {
+const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const resetState = () => {
-    setError(null);
-    setLoading(true);
-    setProducts([]);
-  };
-
   useEffect(() => {
-    resetState();
-    fetch("http://127.0.0.1:3000/api/v1/products", {})
+    fetch("http://127.0.0.1:3000/api/v1/products")
       .then((res) => {
         if (res.status != 200) setError("Error");
         return res.json();

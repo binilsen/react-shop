@@ -1,9 +1,13 @@
 import styles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 const Navbar = () => {
   const authCtx = useContext(AuthContext);
+  const logoutHandler = () => {
+    authCtx.onLogout();
+    authCtx.setStatus("Logged out successfully");
+  };
   const isLoginValid = localStorage.getItem("login_valid");
   return (
     <div className={`p-3 mb-3 ${styles.nav}  rounded shadow-lg`}>
@@ -22,7 +26,7 @@ const Navbar = () => {
             )}
             {isLoginValid && (
               <button
-                onClick={authCtx.onLogout}
+                onClick={logoutHandler}
                 className=" mx-2 btn btn-dark btn-lg"
               >
                 Logout
