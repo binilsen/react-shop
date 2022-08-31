@@ -12,7 +12,7 @@ const Cart = () => {
   const cartCtx = useContext(CartContext);
   const orderHandler = async () => {
     const response = await fetch(
-      `http://127.0.0.1:3000/carts/${cartCtx.cart.id}/place_order`,
+      `http://127.0.0.1:3000/api/carts/${cartCtx.cart.id}/place_order`,
       {
         headers: {
           authorization: Cookies.get("authToken"),

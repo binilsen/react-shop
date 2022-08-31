@@ -1,5 +1,5 @@
 import User from "./User/User";
-import Profile from "./User/Profile";
+import UserHome from "./User/Profile/UserHome";
 import ProductList from "./Product/ProductList";
 import AuthFilter from "./Utilites/AuthFilter";
 import Header from "./UI/Header";
@@ -11,7 +11,7 @@ import Category from "./UI/Category";
 export {
   User,
   ProductList,
-  Profile,
+  UserHome,
   AuthFilter,
   Header,
   StatusBar,

@@ -1,8 +1,10 @@
 import { useContext, useRef, useState } from "react";
-import Input from "../UI/Input";
-import AuthContext from "./../../store/auth-context";
 import { useNavigate } from "react-router-dom";
+import Input from "../UI/Input";
+import GoogleAuth from "./../UI/GoogleAuth";
+import AuthContext from "./../../store/auth-context";
 import CartContext from "../../store/cart-context";
+import addValidationClass from "./../Utilites/addValidationClass";
 const UserForm = () => {
   let navigate = useNavigate();
   const authCtx = useContext(AuthContext);
@@ -12,18 +14,14 @@ const UserForm = () => {
   const passwordRef = useRef();
   var [isPasswordValid, isEmailValid] = [false, false];
   const emailChangeHandler = () => {
-    if (emailRef.current.value != "" && emailRef.current.validity.valid) {
-      emailRef.current.classList.add("is-valid");
-      emailRef.current.classList.remove("is-invalid");
-      isEmailValid = true;
-    } else emailRef.current.classList.add("is-invalid");
+    if (emailRef.current.value != "" && emailRef.current.validity.valid)
+      isEmailValid = addValidationClass(emailRef);
+    else isEmailValid = addValidationClass(emailRef, false);
   };
   const passwordChangeHandler = () => {
-    if (passwordRef.current.value.length >= 6) {
-      passwordRef.current.classList.add("is-valid");
-      passwordRef.current.classList.remove("is-invalid");
-      isPasswordValid = true;
-    } else passwordRef.current.classList.add("is-invalid");
+    if (passwordRef.current.value.length >= 6)
+      isPasswordValid = addValidationClass(passwordRef);
+    else isPasswordValid = addValidationClass(passwordRef, false);
   };
   const formHandler = async (event) => {
     event.preventDefault();
@@ -37,24 +35,25 @@ const UserForm = () => {
     await fetch("http://127.0.0.1:3000/api/users/sign_in", {
       method: "POST",
       body: formData,
-    }).then((response) => {
-      let data = response.json();
-      if (response.ok) {
-        data.then((content) => {
-          console.log(response.headers.get("authorization"));
-          authCtx.onLogin({
-            token: response.headers.get("authorization"),
-            userImage: content.image,
-            username: content.email,
-            id: content.id,
+    })
+      .then((response) => {
+        let data = response.json();
+        if (response.ok) {
+          data.then((content) => {
+            console.log(response.headers.get("authorization"));
+            authCtx.onLogin({
+              token: response.headers.get("authorization"),
+              username: content.user.email,
+              id: content.user.id,
+            });
+            cartCtx.cartUpdate(content.cart);
+            authCtx.setStatus("Successfully logged in.");
+            return navigate(`/users/${authCtx.userId}`, { replace: true });
           });
-          cartCtx.cartUpdate(content.cart);
-          authCtx.setStatus("Successfully logged in.");
-          return navigate(`/users/${authCtx.userId}`, { replace: true });
-        });
-      }
-      data.then((e) => setFormError(e.error));
-    });
+        }
+        data.then((e) => setFormError(e.error));
+      })
+      .catch((e) => authCtx.setStatus(e.message));
   };
   return (
     <>
@@ -83,10 +82,11 @@ const UserForm = () => {
         />
         <div className="text-center my-2">
           <button type="submit" className=" btn btn-dark">
-            login
+            Login
           </button>
         </div>
       </form>
+      <GoogleAuth />
     </>
   );
 };

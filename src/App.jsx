@@ -13,7 +13,7 @@ function App() {
   const authCtx = useContext(AuthContext);
   const checkLogin = useCallback(async () => {
     if (!authToken) return;
-    const response = await fetch("http://127.0.0.1:3000/api/users/sign_in", {
+    const response = await fetch("http://127.0.0.1:3000/api/users/valid_auth", {
       method: "POST",
       headers: {
         Authorization: authToken,
@@ -24,9 +24,8 @@ function App() {
       data.then((content) => {
         authCtx.onLogin({
           token: response.headers.get("Authorization"),
-          userImage: content.image,
-          username: content.email,
-          id: content.id,
+          username: content.user.email,
+          id: content.user.id,
           cart: content.cart,
         });
       });
@@ -47,7 +46,7 @@ function App() {
             path="/users/:userid"
             element={
               <Component.AuthFilter>
-                <Component.Profile />
+                <Component.UserHome />
               </Component.AuthFilter>
             }
           />

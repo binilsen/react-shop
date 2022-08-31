@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../../store/auth-context";
-import UserImage from "./../../assets/user.svg";
+import AuthContext from "../../../store/auth-context";
+import UserImage from "../../../assets/user.svg";
 
 const UserCard = () => {
   const authCtx = useContext(AuthContext);

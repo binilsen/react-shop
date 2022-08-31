@@ -9,7 +9,7 @@ const CartItem = (props) => {
   const cartCtx = useContext(CartContext);
   const authCtx = useContext(AuthContext);
   const addProductHandler = async () => {
-    await fetch(`http://127.0.0.1:3000/products/${productId}/add`, {
+    await fetch(`http://127.0.0.1:3000/api/products/${productId}/add`, {
       method: "POST",
       headers: {
         authorization: Cookies.get("authToken"),
@@ -22,7 +22,7 @@ const CartItem = (props) => {
       .catch((e) => authCtx.setStatus(e));
   };
   const removeProductHandler = async () => {
-    await fetch(`http://127.0.0.1:3000/products/${productId}/remove`, {
+    await fetch(`http://127.0.0.1:3000/api/products/${productId}/remove`, {
       method: "POST",
       headers: {
         authorization: Cookies.get("authToken"),

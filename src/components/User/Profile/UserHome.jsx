@@ -1,5 +1,5 @@
 import UserCard from "./UserCard";
-const Profile = () => {
+const UserHome = () => {
   return (
     <>
       <UserCard />
@@ -7,4 +7,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserHome;

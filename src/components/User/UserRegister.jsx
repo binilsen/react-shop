@@ -1,9 +1,9 @@
 import { useContext, useRef, useState } from "react";
 import AuthContext from "../../store/auth-context";
 import Input from "../UI/Input";
+import GoogleAuth from "../UI/GoogleAuth";
 import { useNavigate } from "react-router-dom";
 const UserRegister = () => {
-  const [formError, setFormError] = useState(false);
   let navigate = useNavigate();
   const authCtx = useContext(AuthContext);
   const formRef = useRef();
@@ -20,9 +20,8 @@ const UserRegister = () => {
     emailChangeHandler() || passwordChangeHandler() || passwordConfirmHandler();
     const formValidity =
       isEmailValid && isPasswordValid && isConfirmPasswordValid;
-    if (!formValidity) return setFormError("Invalid form entry");
+    if (!formValidity) return authCtx.setStatus("Invalid form entry");
     const formData = new FormData();
-    console.log(emailRef.current.value);
     formData.append("user[email]", emailRef.current.value);
     formData.append("user[password]", passwordRef.current.value);
     formData.append(
@@ -32,58 +31,50 @@ const UserRegister = () => {
     await fetch("http://127.0.0.1:3000/api/users", {
       method: "POST",
       body: formData,
-    }).then((response) => {
-      let data = response.json();
-      data.then((content) => {
-        if (response.ok) {
-          authCtx.onLogin({
-            token: response.headers.get("Authorization"),
-            username: content.email,
-          });
-          authCtx.setStatus("Registration Successful.");
-          formRef.current.reset();
-          return navigate("/profile", { replace: true });
-        }
-      });
-      data.then((e) => {
-        var error = Object.entries(e.errors);
-        error = String(error[0]);
-        setFormError(error);
-      });
-    });
+    })
+      .then((response) => {
+        let data = response.json();
+        data.then((content) => {
+          if (response.ok) {
+            authCtx.onLogin({
+              token: response.headers.get("Authorization"),
+              username: content.email,
+            });
+            authCtx.setStatus("Registration Successful.");
+            formRef.current.reset();
+            return navigate("/profile", { replace: true });
+          }
+        });
+
+        data.then((e) => {
+          var error = Object.entries(e.errors);
+          error = String(error[0]);
+          authCtx.setStatus(error);
+        });
+      })
+      .catch((e) => authCtx.setStatus("Server error"));
   };
   const emailChangeHandler = () => {
-    if (emailRef.current.value != "" && emailRef.current.validity.valid) {
-      emailRef.current.classList.add("is-valid");
-      emailRef.current.classList.remove("is-invalid");
-      isEmailValid = true;
-    } else emailRef.current.classList.add("is-invalid");
+    if (emailRef.current.value != "" && emailRef.current.validity.valid)
+      isEmailValid = addValidationClass(emailRef);
+    else isEmailValid = addValidationClass(emailRef, false);
   };
   const passwordChangeHandler = () => {
-    if (passwordRef.current.value.length >= 6) {
-      passwordRef.current.classList.add("is-valid");
-      passwordRef.current.classList.remove("is-invalid");
-      isPasswordValid = true;
-    } else passwordRef.current.classList.add("is-invalid");
+    if (passwordRef.current.value.length >= 6)
+      isPasswordValid = addValidationClass(passwordRef);
+    else isPasswordValid = addValidationClass(passwordRef, false);
   };
   const passwordConfirmHandler = () => {
     if (
       passwordRef.current.value === confirmPasswordRef.current.value &&
       confirmPasswordRef.current.value.length >= 6
-    ) {
-      confirmPasswordRef.current.classList.add("is-valid");
-      confirmPasswordRef.current.classList.remove("is-invalid");
-      isConfirmPasswordValid = true;
-    } else confirmPasswordRef.current.classList.add("is-invalid");
+    )
+      isConfirmPasswordValid = addValidationClass(confirmPasswordRef);
+    else isConfirmPasswordValid = addValidationClass(confirmPasswordRef, false);
   };
   return (
     <>
       <h2 className="text-center">Register</h2>
-      {formError && (
-        <div className="alert text-center fw-bold text-capitalize alert-danger">
-          {formError}
-        </div>
-      )}
       <form action="#" noValidate onSubmit={formHandler} ref={formRef}>
         <Input
           name="email"
@@ -115,6 +106,7 @@ const UserRegister = () => {
           </button>
         </div>
       </form>
+      <GoogleAuth />
     </>
   );
 };

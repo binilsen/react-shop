@@ -17,7 +17,7 @@ const Product = (props) => {
   const productId = props.product.id;
   var productUnit = props.product.unit.symbol;
   const addProductHandler = async () => {
-    await fetch(`http://127.0.0.1:3000/products/${productId}/add`, {
+    await fetch(`http://127.0.0.1:3000/api/products/${productId}/add`, {
       method: "POST",
       headers: {
         authorization: Cookies.get("authToken"),
@@ -31,7 +31,7 @@ const Product = (props) => {
       .catch((e) => authCtx.setStatus(e));
   };
   const removeProductHandler = async () => {
-    await fetch(`http://127.0.0.1:3000/products/${productId}/remove`, {
+    await fetch(`http://127.0.0.1:3000/products/api/${productId}/remove`, {
       method: "POST",
       headers: {
         authorization: Cookies.get("authToken"),

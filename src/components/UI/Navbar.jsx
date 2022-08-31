@@ -12,9 +12,9 @@ const Navbar = () => {
         authorization: Cookies.get("authToken"),
       },
     });
+    authCtx.setStatus("Logged out successfully");
+    authCtx.onLogout();
     if (response.ok) {
-      authCtx.setStatus("Logged out successfully");
-      authCtx.onLogout();
       return navigate("/", { replace: true });
     }
     authCtx.setStatus("Error occurred");

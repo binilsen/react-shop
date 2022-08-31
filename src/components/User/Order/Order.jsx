@@ -11,7 +11,7 @@ const Order = (props) => {
   const authCtx = useContext(AuthContext);
   const params = useParams();
   const { isLoading, apiData, serverError } = useFetchData({
-    url: `http://127.0.0.1:3000/users/${authCtx.userId}/orders/${params.orderId}`,
+    url: `http://127.0.0.1:3000/api/users/${authCtx.userId}/orders/${params.orderId}`,
     token: Cookies.get("authToken"),
   });
   return (
