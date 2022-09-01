@@ -6,7 +6,7 @@ const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
   const logoutHandler = async () => {
-    const response = await fetch("http://127.0.0.1:3000/api/users/sign_out", {
+    const response = await fetch("http://127.0.0.1:3000/api/v1/users/sign_out", {
       method: "DELETE",
       headers: {
         authorization: Cookies.get("authToken"),

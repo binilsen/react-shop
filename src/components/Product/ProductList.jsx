@@ -4,7 +4,7 @@ import Loader from "./../Utilites/Loader";
 import Category from "../UI/Category";
 const ProductList = () => {
   const { isLoading, apiData, serverError } = useFetchData({
-    url: "http://127.0.0.1:3000/api/products",
+    url: "http://127.0.0.1:3000/api/v1/products",
   });
   return (
     <>

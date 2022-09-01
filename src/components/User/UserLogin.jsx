@@ -32,7 +32,7 @@ const UserForm = () => {
     const formData = new FormData();
     formData.append("user[email]", emailRef.current.value);
     formData.append("user[password]", passwordRef.current.value);
-    await fetch("http://127.0.0.1:3000/api/users/sign_in", {
+    await fetch("http://127.0.0.1:3000/api/v1/users/sign_in", {
       method: "POST",
       body: formData,
     })
@@ -48,7 +48,7 @@ const UserForm = () => {
             });
             cartCtx.cartUpdate(content.cart);
             authCtx.setStatus("Successfully logged in.");
-            return navigate(`/users/${authCtx.userId}`, { replace: true });
+            return navigate(`/users/${content.user.id}`, { replace: true });
           });
         }
         data.then((e) => setFormError(e.error));

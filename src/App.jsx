@@ -13,7 +13,7 @@ function App() {
   const authCtx = useContext(AuthContext);
   const checkLogin = useCallback(async () => {
     if (!authToken) return;
-    const response = await fetch("http://127.0.0.1:3000/api/users/valid_auth", {
+    const response = await fetch("http://127.0.0.1:3000/api/v1/users/valid_auth", {
       method: "POST",
       headers: {
         Authorization: authToken,

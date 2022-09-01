@@ -12,7 +12,7 @@ const UserPicture = () => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("user[avatar]", newUserImage);
-    const response = await fetch("http://127.0.0.1:3000/users", {
+    const response = await fetch("http://127.0.0.1:3000/api/v1/users", {
       headers: {
         Authorization: token,
       },

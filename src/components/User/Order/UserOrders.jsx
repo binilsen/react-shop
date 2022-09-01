@@ -7,7 +7,7 @@ import useFetchData from "./../../../hooks/useFetchData";
 const UserOrders = () => {
   const authCtx = useContext(AuthContext);
   const { isLoading, apiData, serverError } = useFetchData({
-    url: `http://127.0.0.1:3000/api/users/${authCtx.userId}/orders`,
+    url: `http://127.0.0.1:3000/api/v1/users/${authCtx.userId}/orders`,
     token: Cookies.get("authToken"),
   });
   authCtx.setStatus(serverError);

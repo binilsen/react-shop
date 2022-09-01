@@ -11,7 +11,7 @@ const GoogleAuth = () => {
   const navigate = useNavigate();
   const authHandler = (data) => {
     axios
-      .post("http://127.0.0.1:3000/users/auth/google_oauth2/callback", data)
+      .post("http://127.0.0.1:3000/api/v1/users/auth/google_oauth2/callback", data)
       .then((response) => {
         authCtx.onLogin({
           token: response.headers.authorization,
@@ -20,7 +20,7 @@ const GoogleAuth = () => {
         });
         cartCtx.cartUpdate(response.data.cart);
         authCtx.setStatus("Successfully logged in.");
-        return navigate(`/users/${response.data.id}`, { replace: true });
+        return navigate(`/users/${response.data.user.id}`, { replace: true });
       })
       .catch((e) => authCtx.setStatus(e.message));
   };
