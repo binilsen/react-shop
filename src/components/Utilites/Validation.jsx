@@ -1,12 +1,16 @@
-function addValidationClass(ref, add = true) {
-  if (add) {
-    ref.current.classList.add("is-valid");
-    ref.current.classList.remove("is-invalid");
-    return true;
-  } else {
-    ref.current.classList.add("is-invalid");
-    ref.current.classList.remove("is-valid");
-    return false;
-  }
-}
-export default addValidationClass;
+export const emailValid = (value) => {
+  return /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})*$/g.test(value);
+};
+
+export const passwordValid = (value) => {
+  return value.length >= 6;
+};
+
+export const confirmPasswordValid = (value, password) => {
+  return value.length >= 6 && value === password;
+};
+export const pincodeValid = (value) => {
+  return !/\D/g.test(value) && value.length === 6;
+};
+
+export default {};

@@ -1,18 +1,30 @@
-import { useContext, useEffect, useState } from "react";
-import AuthContext from "../../store/auth-context";
-
+import { useEffect } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { MComponents } from "./../MUIExporter";
 const StatusBar = () => {
-  const authCtx = useContext(AuthContext);
-  const [status, setStatus] = useState(authCtx.status);
+  const [isOpen, setIsOpen] = useState(true);
+  const state = useSelector((state) => state.statusReducer);
   useEffect(() => {
-    setStatus(authCtx.status);
-  }, [authCtx.status]);
+    setIsOpen(true);
+  }, [state]);
   return (
     <>
-      {status && (
-        <div className="alert w-50 mx-auto alert-info text-center my-3 fw-bold">
-          {status}
-        </div>
+      {state.status && (
+        <MComponents.Snackbar
+          open={isOpen}
+          autoHideDuration={2000}
+          onClose={() => setIsOpen(false)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <MComponents.Alert
+            severity={state.status.type}
+            variant="filled"
+            sx={{ p: 2, textTransform: "capitalize" }}
+          >
+            {state.status.message}
+          </MComponents.Alert>
+        </MComponents.Snackbar>
       )}
     </>
   );

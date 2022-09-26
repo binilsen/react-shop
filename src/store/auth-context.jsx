@@ -7,7 +7,7 @@ const AuthContext = createContext({
   userImage: null,
   username: "",
   status: null,
-  setStatus: (message) => {},
+  setStatus: ({message}) => {},
 });
 
 export const AuthContextProvider = (props) => {

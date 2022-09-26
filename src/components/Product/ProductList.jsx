@@ -1,6 +1,7 @@
 import ProductContainer from "./ProductContainer";
 import { useEffect, useState } from "react";
-
+import { MComponents } from "../MUIExporter";
+import { DefaultLoader } from "../Utilites/Loader";
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -14,22 +15,23 @@ const ProductList = () => {
       .then((data) => {
         setProducts(data);
       })
-      .catch((error) => setError("unable to connect."))
+      .catch((error) => setError("Unable to connect."))
       .finally((cleanup) => setLoading(false));
   }, []);
 
   return (
     <>
       {error && !isLoading && (
-        <h1 className="alert text-capitalize alert-danger w-50 mx-auto rounded p-2 my-3 text-center">
+        <MComponents.Alert
+          severity="error"
+          variant="filled"
+          sx={{ my: 3, width: "50%", mx: "auto" }}
+        >
           {error}
-        </h1>
+        </MComponents.Alert>
       )}
-      {isLoading && (
-        <h1 className="text-center alert alert-info my-3 w-50 mx-auto border rounded p-2">
-          Loading Products....
-        </h1>
-      )}
+      {isLoading && <DefaultLoader />}
+
       {!isLoading && !error && products && (
         <ProductContainer products={products} />
       )}

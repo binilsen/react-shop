@@ -1,18 +1,24 @@
 import { useState } from "react";
-import noImage from "./../../assets/loadingImage.svg";
+import { Colors, MComponents } from "../MUIExporter";
 const ProductImage = (props) => {
   const [isLoading, setLoading] = useState(true);
-  const style = isLoading ? "d-none" : "img img-thumbnail w-50";
   return (
     <div className="col">
-      {isLoading && <img src={noImage} className="img img-thumbnail rounded-pill w-50" />}
+      {isLoading && (
+        <MComponents.Skeleton
+          variant="rectangular"
+          animation="pulse"
+          height="240"
+          width="100"
+          sx={{ bgcolor: Colors.grey[900] }}
+        />
+      )}
       <img
         onLoad={() => {
           setLoading(false);
         }}
         src={props.image}
         alt="Product logo"
-        className={style}
       />
     </div>
   );

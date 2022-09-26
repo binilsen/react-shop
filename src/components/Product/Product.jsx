@@ -1,39 +1,69 @@
-import styles from "./Product.module.css";
-import ProductImage from "./ProductImage";
-
+import { useState } from "react";
+import { Icons, MComponents, Colors } from "../MUIExporter";
+import priceFormatter from "../Utilites/priceFormatter";
+import { Link } from "react-router-dom";
+import { DefaultLoader } from "../Utilites/Loader";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import ProductActions from "./ProductAction";
 const Product = (props) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const userId = useSelector((state) => state.authReducer.userId);
   return (
     <>
-      <div className={`row p-2 my-2 ${styles.product} align-items-center`}>
-        <div className="col-sm-3">
-          {<ProductImage image={props.product.thumbnail} />}
-        </div>
-        <div className="col-sm-5">
-          <h1 className="fs-4 mb-3">{props.product.name}</h1>
-          <p className={`${styles["text-justify"]} small`}>
-            {props.product.title + "..."}
-          </p>
-        </div>
-        <div className="col-sm-4">
-          <div className="row">
-            <div className="col-sm-12 col-md-6 p-2">
-              <button className="btn btn-light">
-                Stock:
-                <span className="text-danger fs-4"> {props.product.stock}</span>
-              </button>
-            </div>
-            <div className="col-sm-12 col-md-6 p-2">
-              <button className="btn btn-light">
-                Price:
-                <span className="text-danger fs-4">
-                  {" "}
-                  ${props.product.price}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <MComponents.Grid item sm={12} md={4}>
+        <MComponents.Card sx={{ height: "100%" }}>
+          <MComponents.CardActionArea
+            component={Link}
+            to={`/category/${props.product.category.slugs}/${props.product.slugs}`}
+          >
+            {isLoaded && (
+              <MComponents.CardMedia
+                component="img"
+                image={props.product.thumbnail}
+                height="240"
+                width="100"
+                sx={{ objectFit: "contain" }}
+              />
+            )}
+            {!isLoaded && (
+              <MComponents.CardMedia sx={{ textAlign: "center", p: 3 }}>
+                <DefaultLoader />
+              </MComponents.CardMedia>
+            )}
+            <img
+              hidden
+              src={props.product.thumbnail}
+              onLoad={() => setIsLoaded(true)}
+            />
+
+            <MComponents.CardContent>
+              <MComponents.Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <MComponents.Typography variant="h6" component="span">
+                  {props.product.name}
+                </MComponents.Typography>
+                <MComponents.Button variant="outlined" size="small">
+                  {priceFormatter(props.product.price)}
+                </MComponents.Button>
+              </MComponents.Stack>
+              <MComponents.Rating defaultValue={3} readOnly />
+              <MComponents.Typography variant="body2" component={"span"}>
+                {props.product.title.substring(0, 40) + "..."}
+              </MComponents.Typography>
+            </MComponents.CardContent>
+          </MComponents.CardActionArea>
+          <MComponents.CardActions
+            sx={{ justifyContent: "center", bgcolor: Colors.blueGrey[100] }}
+          >
+            <ProductActions id={props.product._id.$oid} />
+          </MComponents.CardActions>
+        </MComponents.Card>
+      </MComponents.Grid>
     </>
   );
 };
