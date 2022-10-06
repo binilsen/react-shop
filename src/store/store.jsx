@@ -8,7 +8,8 @@ const initialState = {
     userId: "",
   },
   statusReducer: { status: null },
-  cartReducer: { cartId: "", cartTotal: "", carts_products: {} },
+  cartReducer: { cartId: null, cartTotal: null, carts_products: null },
+  buyNowreducer: { product: null },
 };
 
 const store = configureStore({

@@ -12,5 +12,7 @@ export const confirmPasswordValid = (value, password) => {
 export const pincodeValid = (value) => {
   return !/\D/g.test(value) && value.length === 6;
 };
-
+export const mobileValid = (value) => {
+  return !/\D/g.test(value) && value.length === 10;
+};
 export default {};

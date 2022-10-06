@@ -7,7 +7,7 @@ const statusSlice = createSlice({
   },
   reducers: {
     setStatus: (state, action) => {
-      state.status = action.payload.message;
+      state.status = action.payload;
     },
   },
 });

@@ -1,7 +1,7 @@
 import { Icons, MComponents } from "../../MUIExporter";
 const PanelHelp = () => {
   return (
-    <MComponents.Stack spacing={3}>
+    <MComponents.Stack spacing={3} height="500px">
       <MComponents.Button sx={{ p: 3 }} variant="contained" color="primary">
         <Icons.Email sx={{ mx: 1 }} /> Email us
       </MComponents.Button>

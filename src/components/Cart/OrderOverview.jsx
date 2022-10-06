@@ -1,6 +1,14 @@
+import { useSelector } from "react-redux";
 import { MComponents, Icons } from "../MUIExporter";
+import AddressCard from "../UI/AddressCard";
 import CartAction from "./CartAction";
-const OrderOverview = () => {
+import { gstFormatter } from "../Utilites/priceFormatter";
+const OrderOverview = (props) => {
+  const cartState = useSelector((state) => state.cartReducer);
+  const product = useSelector((state) => state.buyNowreducer);
+  const amount = props.isBuynow
+    ? gstFormatter(product.amount) + product.amount
+    : null;
   return (
     <MComponents.Stack spacing={2}>
       <MComponents.Typography variant="overline" borderBottom={1}>
@@ -13,17 +21,7 @@ const OrderOverview = () => {
             <MComponents.Typography variant="overline">
               Selected address:
             </MComponents.Typography>
-            <MComponents.Paper
-              sx={{
-                p: 3,
-                bgcolor: "primary.main",
-                color: "secondary.main",
-              }}
-              elevation={10}
-            >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Exercitationem, minima?
-            </MComponents.Paper>
+            <AddressCard address={props.address} />
           </MComponents.Grid>
           <MComponents.Grid item md={4} sm={12} xs={12}>
             <MComponents.Stack spacing={2}>
@@ -46,12 +44,12 @@ const OrderOverview = () => {
                 textAlign="center"
               >
                 <Icons.CurrencyRupee />
-                320.00
+                {cartState.cartTotal || Number.parseInt(amount)}
               </MComponents.Typography>
             </MComponents.Stack>
           </MComponents.Grid>
         </MComponents.Grid>
-        <CartAction />
+        <CartAction address={props.address} isBuynow={!!amount} />
       </MComponents.Paper>
     </MComponents.Stack>
   );

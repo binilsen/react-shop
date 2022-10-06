@@ -9,7 +9,8 @@ const AuthFilter = (props) => {
   if (authState) return props.children;
   dispatch(
     setStatus({
-      message: { message: "You need to login first.", type: "error" },
+      message: "You need to login first.",
+      type: "error",
     })
   );
   return <Navigate to="/user" replace />;

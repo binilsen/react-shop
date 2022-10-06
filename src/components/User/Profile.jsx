@@ -10,6 +10,7 @@ const Profile = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
   return (
     <div className={styles["user-central"]}>
       <MComponents.Typography

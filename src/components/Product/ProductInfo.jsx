@@ -1,6 +1,23 @@
+import { useSelector } from "react-redux";
 import { MComponents } from "../MUIExporter";
 import priceFormatter from "../Utilites/priceFormatter";
+import withAction from "../withAction";
+import { setBuynowProduct } from "../../store/slices/buyNowSlice";
 const ProductInfo = (props) => {
+  const cartProducts = useSelector((state) => state.cartReducer.carts_products);
+  const { authState, Link, dispatch, navigate } = props;
+  const isSelected = cartProducts
+    ? cartProducts.find((item) => item.product_id.$oid == props.data._id.$oid)
+    : null;
+  const buyHandler = () => {
+    dispatch(
+      setBuynowProduct({
+        product: props.data._id.$oid,
+        amount: props.data.price,
+      })
+    );
+    navigate(`/cart/buy-now/processcart`);
+  };
   return (
     <MComponents.Grid
       container
@@ -41,16 +58,27 @@ const ProductInfo = (props) => {
       </MComponents.Grid>
       <MComponents.Grid item>
         <MComponents.Stack direction="row" justifyContent="space-evenly">
-          <MComponents.Button variant="contained" color="secondary">
+          <MComponents.Button
+            variant="contained"
+            color="secondary"
+            onClick={buyHandler}
+          >
             Buy now
           </MComponents.Button>
-          <MComponents.Button variant="contained" color="secondary">
-            Add to cart
-          </MComponents.Button>
+          {authState && isSelected && (
+            <MComponents.Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              to="/cart"
+            >
+              Go to cart
+            </MComponents.Button>
+          )}
         </MComponents.Stack>
       </MComponents.Grid>
     </MComponents.Grid>
   );
 };
 
-export default ProductInfo;
+export default withAction(ProductInfo);

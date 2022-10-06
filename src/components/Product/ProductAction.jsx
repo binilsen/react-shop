@@ -1,4 +1,4 @@
-import { MComponents, Icons,Backdrop } from "../MUIExporter";
+import { MComponents, Icons, Backdrop } from "../MUIExporter";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,9 +9,10 @@ const ProductActions = (props) => {
   const cartState = useSelector((state) => state.cartReducer);
   const [product, setProduct] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [isRemove, setIsremove] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (authState.isLoggedIn) {
+    if (authState.isLoggedIn && cartState.carts_products) {
       setProduct(
         cartState.carts_products.find(
           (item) => props.id == item.product_id.$oid
@@ -19,11 +20,13 @@ const ProductActions = (props) => {
       );
     }
   }, []);
-  const addProductHandler = (id) => {
+  const quantityHandler = (add = false) => {
     setProcessing(true);
     axios
       .get(
-        `http://127.0.0.1:3000/api/v1/carts/${authState.userId}/process_carts/${props.id}/add`,
+        `http://127.0.0.1:3000/api/v1/carts/${authState.userId}/process_carts/${
+          props.id
+        }/${add ? "add" : "remove"}`,
         {
           headers: {
             Authorization: Cookies.get("rails-token"),
@@ -31,6 +34,7 @@ const ProductActions = (props) => {
         }
       )
       .then((response) => {
+        response.data.remove ? setIsremove(true) : setIsremove(false);
         dispatch(
           setCart({
             cartId: response.data.cart._id.$oid,
@@ -51,7 +55,7 @@ const ProductActions = (props) => {
       )}
       {authState.isLoggedIn && (
         <MComponents.Stack direction="row" justifyContent="space-between">
-          {product && (
+          {product && !isRemove && (
             <MComponents.Button
               variant="contained"
               sx={{
@@ -62,11 +66,12 @@ const ProductActions = (props) => {
                 },
               }}
               size="small"
+              onClick={quantityHandler}
             >
               <Icons.Remove />
             </MComponents.Button>
           )}
-          {product && (
+          {product && !isRemove && (
             <MComponents.Button variant="text" size="small">
               <MComponents.Badge
                 badgeContent={product.quantity}
@@ -88,7 +93,7 @@ const ProductActions = (props) => {
               },
             }}
             size="small"
-            onClick={addProductHandler}
+            onClick={() => quantityHandler(true)}
           >
             <Icons.Add />
           </MComponents.Button>

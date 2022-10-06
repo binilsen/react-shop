@@ -1,15 +1,21 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { MComponents } from "../../MUIExporter";
-const Address = () => {
+const Address = (props) => {
   return (
     <MComponents.Grid item md={4}>
       <MComponents.Card sx={{ height: "100%" }}>
         <MComponents.CardActionArea>
           <MComponents.CardContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
-            asperiores accusantium commodi nostrum explicabo fuga sed iure odio
-            obcaecati voluptatem deserunt, labore dolorem, voluptates ratione
-            dolor vel suscipit saepe doloribus?
+            {props.data.name}, <br />
+            {props.data.address}, <br />
+            {props.data.locality}, <br />
+            {props.data.city}, <br />
+            {props.data.state} <br />
+            {props.data.mobile} <br />
+            Type: {props.data.address_type.type}
+            <br />
+            Delivery time: {props.data.address_type.time}
           </MComponents.CardContent>
         </MComponents.CardActionArea>
         <MComponents.CardActions>
@@ -18,7 +24,7 @@ const Address = () => {
             color="secondary"
             size="small"
             component={Link}
-            to="/profile/edit-address"
+            to={`edit-address/${props.data._id.$oid}`}
           >
             Edit
           </MComponents.Button>

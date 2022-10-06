@@ -5,20 +5,22 @@ import { useParams } from "react-router-dom";
 import { MComponents } from "../MUIExporter";
 import ProductInfo from "./ProductInfo";
 import Loader from "../Utilites/Loader";
-const ProductDetails = () => {
+import withAction from "../withAction";
+const ProductDetails = (props) => {
   const id = useParams();
   const [productData, setProductData] = useState();
+  const { defaultServerError } = props;
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:3000/api/v1/products/${id.item}`)
       .then((response) => setProductData(response))
-      .catch((error) => console.log(error));
+      .catch((error) => defaultServerError());
   }, []);
   return (
     <>
       {!productData && <Loader />}
       {productData && (
-        <MComponents.Container sx={{ height: "100vh" }}>
+        <MComponents.Container>
           <MComponents.Stack
             height="100%"
             justifyContent="center"
@@ -58,4 +60,4 @@ const ProductDetails = () => {
     </>
   );
 };
-export default ProductDetails;
+export default withAction(ProductDetails);

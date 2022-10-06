@@ -11,6 +11,7 @@ import Category from "./Category/Category";
 import ProcessCart from "./Cart/ProcessCart";
 import OrderSuccess from "./Cart/OrderSuccess";
 import EditAddress from "./User/Address/EditAddress";
+import AddAddress from "./User/Address/AddAddress";
 export {
   AuthFilter,
   Header,
@@ -25,4 +26,5 @@ export {
   ProcessCart,
   OrderSuccess,
   EditAddress,
+  AddAddress,
 };

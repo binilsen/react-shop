@@ -18,11 +18,11 @@ const StatusBar = () => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
           <MComponents.Alert
-            severity={state.status.type}
+            severity={state.status.type ||"error"}
             variant="filled"
             sx={{ p: 2, textTransform: "capitalize" }}
           >
-            {state.status.message}
+            {state.status.message || "Failed to fetch"}
           </MComponents.Alert>
         </MComponents.Snackbar>
       )}

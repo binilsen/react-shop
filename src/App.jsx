@@ -6,6 +6,7 @@ import Order from "./components/User/Order/Order";
 import ProductDetails from "./components/Product/ProductDetails";
 import { useDispatch } from "react-redux";
 import { onLogin, onLogout } from "./store/slices/authSlice";
+import { setCart } from "./store/slices/cartSlice";
 import Cookies from "js-cookie";
 import axios from "axios";
 function App() {
@@ -14,7 +15,7 @@ function App() {
   const checkLogin = async () => {
     if (!authToken) return;
     axios
-      .get("http://127.0.0.1:3000/auth/validate_token", {
+      .get("http://127.0.0.1:3000/api/v1/auth/validate_token", {
         headers: {
           Authorization: authToken,
         },
@@ -26,6 +27,13 @@ function App() {
             userImage: response.data.image,
             username: response.data.data.email,
             userId: response.data.data.id,
+          })
+        );
+        dispatch(
+          setCart({
+            cartId: response.data.cart._id.$oid,
+            cartTotal: response.data.cart.total,
+            carts_products: response.data.carts_products,
           })
         );
       })
@@ -43,25 +51,62 @@ function App() {
         <Route path="/" element={<Component.Home />} />
         <Route path="user" element={<Component.User />} />
         <Route
-          path="user/profile/:id"
+          path="/user/profile/:id"
           element={
             <Component.AuthFilter>
               <Component.Profile />
             </Component.AuthFilter>
           }
         />
-        <Route path="cart" element={<Component.UserCart />} />
-        <Route path="user/profile/:id/order" element={<Order />} />
         <Route
-          path="user/profile/:id/cart/:id/processcart"
-          element={<Component.ProcessCart />}
+          path="/cart/:cart_id/processcart"
+          element={
+            <Component.AuthFilter>
+              <Component.ProcessCart />
+            </Component.AuthFilter>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <Component.AuthFilter>
+              <Component.UserCart />
+            </Component.AuthFilter>
+          }
+        />
+        <Route
+          path="user/profile/:id/orders/:order_id"
+          element={
+            <Component.AuthFilter>
+              <Order />
+            </Component.AuthFilter>
+          }
         />
         <Route path="/category/:slug" element={<Component.Category />} />
         <Route path="category/:slug/:item" element={<ProductDetails />} />
-        <Route path="/order-success" element={<Component.OrderSuccess />} />
         <Route
-          path="user/profile/:id/edit-address"
-          element={<Component.EditAddress />}
+          path="/order-success/:id"
+          element={
+            <Component.AuthFilter>
+              <Component.OrderSuccess />
+            </Component.AuthFilter>
+          }
+        />
+        <Route
+          path="/user/profile/:id/add-address"
+          element={
+            <Component.AuthFilter>
+              <Component.AddAddress />
+            </Component.AuthFilter>
+          }
+        />
+        <Route
+          path="user/profile/:id/edit-address/:address_id"
+          element={
+            <Component.AuthFilter>
+              <Component.EditAddress />
+            </Component.AuthFilter>
+          }
         />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>

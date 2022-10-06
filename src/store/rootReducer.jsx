@@ -1,11 +1,13 @@
 import authReducer from "./slices/authSlice";
 import statusReducer from "./slices/statusSlice";
 import cartReducer from "./slices/cartSlice";
+import buyNowreducer from "./slices/buyNowSlice";
 import { combineReducers } from "@reduxjs/toolkit";
 const appReducer = combineReducers({
   authReducer,
   statusReducer,
   cartReducer,
+  buyNowreducer,
 });
 const initialState = {
   authReducer: {
@@ -15,7 +17,8 @@ const initialState = {
     userId: "",
   },
   statusReducer: { status: null },
-  cartReducer: { cartId: "", cartTotal: "", carts_products: {} },
+  cartReducer: { cartId: null, cartTotal: null, carts_products: null },
+  buyNowreducer: { product: null },
 };
 
 const rootReducer = (state, action) => {

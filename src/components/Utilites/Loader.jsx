@@ -21,14 +21,14 @@ const Loader = () => {
 export const DefaultLoader = () => {
   return (
     <MComponents.Stack height="100%" justifyContent="center">
-      <MComponents.Typography padding={1} marginY={3} textAlign="center">
+      <MComponents.Box padding={1} marginY={3} textAlign="center">
         <SpinnerCircular
           color="#ffd803"
           thickness={150}
           size={70}
           secondaryColor="#272343"
         />
-      </MComponents.Typography>
+      </MComponents.Box>
     </MComponents.Stack>
   );
 };

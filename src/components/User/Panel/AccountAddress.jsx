@@ -1,13 +1,12 @@
 import { MComponents } from "../../MUIExporter";
 import Address from "./Address";
-const AccountAddress = () => {
+const AccountAddress = (props) => {
   return (
-    
-      <MComponents.Grid container spacing={1}>
-        <Address />
-        <Address />
-        <Address />
-      </MComponents.Grid>
+    <MComponents.Grid container spacing={1}>
+      {props.addresses.map((item) => (
+        <Address data={item} />
+      ))}
+    </MComponents.Grid>
   );
 };
 export default AccountAddress;

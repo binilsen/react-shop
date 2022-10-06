@@ -33,27 +33,26 @@ const UserForm = (props) => {
             userId: response.data.user.id,
           })
         );
+        if (response.data.cart)
+          dispatch(
+            setCart({
+              cartId: response.data.cart._id.$oid,
+              carts_products: response.data.cart.carts_products,
+              cartTotal: response.data.cart.total,
+            })
+          );
         dispatch(
-          setCart({
-            cartId: response.data.cart._id.$oid,
-            carts_products: response.data.cart.carts_products,
-            cartTotal: response.data.cart.total,
-          })
-        );
-        dispatch(
-          setStatus({
-            message: { message: "Successfully logged in.", type: "success" },
-          })
+          setStatus({ message: "Successfully logged in.", type: "success" })
         );
         reset();
-        return navigate(`user/profile/${response.data.user.id}`, {
+        return navigate(`/user/profile/${response.data.user.id}`, {
           replace: true,
         });
       })
       .catch((e) =>
         dispatch(
           setStatus({
-            message: { message: e.response.error, type: "error" },
+            message: { message: e.response.data.errors[0], type: "error" },
           })
         )
       )

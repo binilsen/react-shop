@@ -6,6 +6,7 @@ import { setStatus } from "../../../store/slices/statusSlice";
 import { onLogout } from "../../../store/slices/authSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
+import styles from "./Navbar.module.css";
 const NavbarMenu = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.authReducer);
@@ -19,9 +20,7 @@ const NavbarMenu = () => {
     dispatch(onLogout());
     dispatch({ type: "RESET" });
     dispatch(
-      setStatus({
-        message: { message: "Logged out successfully", type: "success" },
-      })
+      setStatus({ message: "Logged out successfully", type: "success" })
     );
   };
   return (
@@ -49,7 +48,9 @@ const NavbarMenu = () => {
       )}
       {authState.isLoggedIn && (
         <MComponents.Badge
-          badgeContent={cartState ? cartState.carts_products.length : 0}
+          badgeContent={
+            cartState.carts_products ? cartState.carts_products.length : 0
+          }
           overlap="circular"
           color="secondary"
         >

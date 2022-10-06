@@ -30,7 +30,7 @@ const UserRegister = (props) => {
     formData.append("password", data.password);
     formData.append("password_confirmation", data.confirmPassword);
     axios
-      .post("http://127.0.0.1:3000/auth/", formData)
+      .post("http://127.0.0.1:3000/api/v1/auth/", formData)
       .then((response) => {
         dispatch(
           onLogin({
@@ -41,10 +41,8 @@ const UserRegister = (props) => {
         );
         dispatch(
           setStatus({
-            message: {
-              message: "Registration Successfull.",
-              type: "info",
-            },
+            message: "Registration Successfull.",
+            type: "info",
           })
         );
         reset();

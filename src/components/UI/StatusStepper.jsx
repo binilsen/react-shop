@@ -10,7 +10,7 @@ const StatusStepper = () => {
               icon: <Icons.Archive />,
               completed: true,
             }}
-            sx={{ color: "secondary.dark" }}
+            sx={{ color: "error.dark" }}
           >
             Ordered
           </MComponents.StepLabel>

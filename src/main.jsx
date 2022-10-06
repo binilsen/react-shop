@@ -7,7 +7,7 @@ import store from "./store/store";
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./components/Utilites/ColorPalette";
-import client from "../src/components/graphql/ApolloClient";
+import client from "../src/graphql/ApolloClient";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

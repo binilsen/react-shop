@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { Icons, MComponents, Colors } from "../MUIExporter";
+import { MComponents, Colors } from "../MUIExporter";
 import priceFormatter from "../Utilites/priceFormatter";
 import { Link } from "react-router-dom";
 import { DefaultLoader } from "../Utilites/Loader";
-import axios from "axios";
 import { useSelector } from "react-redux";
-import Cookies from "js-cookie";
 import ProductActions from "./ProductAction";
 const Product = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,7 +14,7 @@ const Product = (props) => {
         <MComponents.Card sx={{ height: "100%" }}>
           <MComponents.CardActionArea
             component={Link}
-            to={`/category/${props.product.category.slugs}/${props.product.slugs}`}
+            to={`/category/${props.product.category._slugs[0]}/${props.product._slugs}`}
           >
             {isLoaded && (
               <MComponents.CardMedia
