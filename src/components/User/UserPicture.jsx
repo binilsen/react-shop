@@ -1,12 +1,14 @@
 import styles from "./UserPicture.module.css";
-import { useState, useContext } from "react";
-import AuthContext from "./../../store/auth-context";
+import { useState } from "react";
+import { Icons, MComponents } from "../MUIExporter";
+import { useSelector } from "react-redux";
 const UserPicture = () => {
-  const authCtx = useContext(AuthContext);
+  const authState = useSelector((state) => state.authReducer);
   const [isEditClicked, setisEditClicked] = useState(false);
   const inputStyle = isEditClicked ? styles.show : styles.hidden;
   const [newUserImage, setNewUserImage] = useState(null);
-  const [userImage, setUserImage] = useState(authCtx.userImage);
+  const [userImage, setUserImage] = useState(authState.userImage);
+  const [tempImg, setTempImg] = useState();
   const token = localStorage.getItem("token");
   const formHandler = async (event) => {
     event.preventDefault();
@@ -28,66 +30,66 @@ const UserPicture = () => {
   };
   const handleChange = (event) => {
     setNewUserImage(event.target.files[0]);
+    setTempImg(URL.createObjectURL(event.target.files[0]));
+  };
+  const fileHandler = () => {
+    setisEditClicked(true);
+    document.getElementById("file-exp").click();
   };
   return (
-    <div className="row m-5 justify-content-center">
-      <div className={`col-sm-6  shadow p-3 ${styles["profile-banner"]}`}>
-        <div className="content p-1">
-          <div className="pic my-3 text-center">
-            {userImage && (
-              <img
-                src={userImage}
-                className="img img-thumbnail  shadow-lg rounded"
-                width="160px"
-                height="150px"
-              />
-            )}
-          </div>
-          <div className="text-center p-3">
-            <form action="#" onSubmit={formHandler}>
-              <div className="my-2 d-flex justify-content-center">
-                <label htmlFor="image" hidden>
-                  Select image
-                </label>
-                <input
-                  accept="image/*"
-                  type="file"
-                  typeof="image"
-                  className={`  form-control w-75 ${inputStyle}`}
-                  onChange={handleChange}
-                />
-              </div>
+    <MComponents.Stack direction="row">
+      <MComponents.Badge
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        badgeContent={
+          <MComponents.IconButton
+            sx={{ bgcolor: "primary.light" }}
+            onClick={fileHandler}
+          >
+            <Icons.ModeEdit color="default" />
+          </MComponents.IconButton>
+        }
+      >
+        <MComponents.IconButton>
+          <MComponents.Avatar
+            src={tempImg ? tempImg : userImage}
+            sx={{ width: 100, height: 90 }}
+          />
+        </MComponents.IconButton>
+      </MComponents.Badge>
 
-              {isEditClicked && (
-                <button type="submit" className="btn btn-dark">
-                  Change
-                </button>
-              )}
-              {!isEditClicked && (
-                <button
-                  type="button"
-                  onClick={() => setisEditClicked(true)}
-                  className="btn btn-dark"
-                >
-                  Edit
-                </button>
-              )}
-            </form>
-            {isEditClicked && (
-              <button
-                className="btn btn-danger my-2"
-                onClick={() => {
-                  setisEditClicked(false);
-                  setNewUserImage(false);
-                }}
-              >
-                Cancel
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+      <MComponents.Stack spacing={2} paddingX={3} justifyContent="center">
+        <form action="#" onSubmit={formHandler}>
+          <input
+            accept="image/*"
+            type="file"
+            typeof="image"
+            className={`  form-control w-75 ${inputStyle}`}
+            onChange={handleChange}
+            id="file-exp"
+            hidden
+          />
+          {isEditClicked && (
+            <MComponents.Button variant="contained" size="small" type="submit">
+              Change
+            </MComponents.Button>
+          )}
+        </form>
+        {isEditClicked && (
+          <MComponents.Button
+            variant="contained"
+            size="small"
+            type="reset"
+            onClick={() => {
+              setisEditClicked(false);
+              setTempImg(userImage);
+            }}
+          >
+            Cancel
+          </MComponents.Button>
+        )}
+      </MComponents.Stack>
+    </MComponents.Stack>
   );
 };
 

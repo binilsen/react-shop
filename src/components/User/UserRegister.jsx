@@ -1,110 +1,116 @@
-import { useContext, useRef, useState } from "react";
-import AuthContext from "../../store/auth-context";
 import Input from "../UI/Input";
-import addValidationClass from "./../Utilites/Validation";
 import { useNavigate } from "react-router-dom";
-const UserRegister = () => {
+import { MComponents } from "../MUIExporter";
+import { useForm } from "react-hook-form";
+import { errorFormatter, errorMessages } from "../Utilites/Errors";
+import { useDispatch } from "react-redux";
+import { setStatus } from "../../store/slices/statusSlice";
+import { onLogin, onLogout } from "../../store/slices/authSlice";
+import {
+  emailValid,
+  passwordValid,
+  confirmPasswordValid,
+} from "../Utilites/Validation";
+import axios from "axios";
+
+const UserRegister = (props) => {
   let navigate = useNavigate();
-  const authCtx = useContext(AuthContext);
-  const [formRef, emailRef, passwordRef, confirmPasswordRef] = [
-    useRef(),
-    useRef(),
-    useRef(),
-    useRef(),
-  ];
-  var [isEmailValid, isPasswordValid, isConfirmPasswordValid] = [
-    false,
-    false,
-    false,
-  ];
-  const formHandler = async (event) => {
-    event.preventDefault();
-    emailChangeHandler() || passwordChangeHandler() || passwordConfirmHandler();
-    const formValidity =
-      isEmailValid && isPasswordValid && isConfirmPasswordValid;
-    if (!formValidity) return authCtx.setStatus("Invalid form entry");
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    reset,
+  } = useForm({ mode: "onChange" });
+  const formHandler = async (data) => {
     const formData = new FormData();
-    formData.append("user[email]", emailRef.current.value);
-    formData.append("user[password]", passwordRef.current.value);
-    formData.append(
-      "user[password_confirmation]",
-      confirmPasswordRef.current.value
-    );
-    await fetch("http://127.0.0.1:3000/users", {
-      method: "POST",
-      body: formData,
-    }).then((response) => {
-      let data = response.json();
-      data.then((content) => {
-        if (response.ok) {
-          authCtx.onLogin({
-            token: response.headers.get("Authorization"),
-            username: content.email,
-          });
-          authCtx.setStatus("Registration Successful.");
-          formRef.current.reset();
-          return navigate("/profile", { replace: true });
-        }
-      });
-      data.then((e) => {
-        var error = Object.entries(e.errors);
-        error = String(error[0]);
-        authCtx.setStatus(error);
-      });
-    });
+    props.submitHandler(true);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("password_confirmation", data.confirmPassword);
+    axios
+      .post("http://127.0.0.1:3000/api/v1/auth/", formData)
+      .then((response) => {
+        dispatch(
+          onLogin({
+            token: response.headers.authorization,
+            userImage: response.data.image,
+            username: response.data.email,
+          })
+        );
+        dispatch(
+          setStatus({
+            message: "Registration Successfull.",
+            type: "info",
+          })
+        );
+        reset();
+        return navigate("/profile", { replace: true });
+      })
+      .catch((e) => {
+        dispatch(
+          setStatus({
+            message: {
+              message: errorFormatter(e.response.data.errors),
+              type: "error",
+            },
+          })
+        );
+      })
+      .finally(() => props.submitHandler(false));
   };
-  const emailChangeHandler = () => {
-    if (emailRef.current.value != "" && emailRef.current.validity.valid)
-      isEmailValid = addValidationClass(emailRef);
-    else isEmailValid = addValidationClass(emailRef, false);
-  };
-  const passwordChangeHandler = () => {
-    if (passwordRef.current.value.length >= 6)
-      isPasswordValid = addValidationClass(passwordRef);
-    else isPasswordValid = addValidationClass(passwordRef, false);
-  };
-  const passwordConfirmHandler = () => {
-    if (
-      passwordRef.current.value === confirmPasswordRef.current.value &&
-      confirmPasswordRef.current.value.length >= 6
-    )
-      isConfirmPasswordValid = addValidationClass(confirmPasswordRef);
-    else isConfirmPasswordValid = addValidationClass(confirmPasswordRef, false);
-  };
+
   return (
     <>
-      <h2 className="text-center">Register</h2>
-      <form action="#" noValidate onSubmit={formHandler} ref={formRef}>
-        <Input
-          name="email"
-          type="email"
-          placeholder="email"
-          ref={emailRef}
-          onChange={emailChangeHandler}
-          error="Invalid email."
-        />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Password"
-          ref={passwordRef}
-          onChange={passwordChangeHandler}
-          error="Password need to be atleast 6 character long."
-        />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Confirm Password"
-          ref={confirmPasswordRef}
-          onChange={passwordConfirmHandler}
-          error="Password doesn't match."
-        />
-        <div className="text-center my-2">
-          <button type="submit" className=" btn btn-dark">
-            Register
-          </button>
-        </div>
-      </form>
+      <MComponents.Box bgcolor="white" borderRadius={2} sx={{ p: 1 }}>
+        <MComponents.Typography variant="h3">Register</MComponents.Typography>
+        <form action="#" noValidate onSubmit={handleSubmit(formHandler)}>
+          <Input
+            name="email"
+            type="email"
+            fields={{
+              ...register("email", {
+                required: true,
+                validate: emailValid,
+              }),
+            }}
+            error={errors.email ? errorMessages.register[0].email : false}
+          />
+          <Input
+            name="password"
+            type="password"
+            fields={{
+              ...register("password", {
+                required: true,
+                validate: passwordValid,
+              }),
+            }}
+            error={errors.password ? errorMessages.register[1].password : false}
+          />
+          <Input
+            name="confirm Password"
+            type="password"
+            fields={{
+              ...register("confirmPassword", {
+                required: true,
+                validate: (value) =>
+                  confirmPasswordValid(value, getValues().password),
+              }),
+            }}
+            error={
+              errors.confirmPassword
+                ? errorMessages.register[2].confirmPassword
+                : false
+            }
+          />
+          <MComponents.Stack sx={{ my: 2 }}>
+            <MComponents.Button type="submit" size="large" variant="contained">
+              Register
+            </MComponents.Button>
+          </MComponents.Stack>
+        </form>
+      </MComponents.Box>
     </>
   );
 };

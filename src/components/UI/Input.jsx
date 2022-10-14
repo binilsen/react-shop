@@ -1,22 +1,18 @@
-import { forwardRef } from "react";
-
-const Input = forwardRef((props, ref) => {
+import { MComponents } from "../MUIExporter";
+const Input = (props) => {
   return (
-    <div className="form-floating my-3">
-      <input
+    <MComponents.Stack>
+      <MComponents.TextField
+        variant="standard"
         type={props.type}
-        name={props.name}
-        placeholder={props.placeholder}
-        className="form-control"
-        ref={ref}
-        onChange={props.onChange}
+        {...props.fields}
+        label={props.name}
+        error={Boolean(props.error)}
+        sx={{ my: 1, textTransform: "capitalize" }}
+        helperText={props.error}
       />
-      <label className="text-capitalize" htmlFor={props.name}>
-        {props.placeholder}
-      </label>
-      <div className="invalid-feedback">{props.error}</div>
-    </div>
+    </MComponents.Stack>
   );
-});
+};
 
 export default Input;
