@@ -8,8 +8,6 @@ import CartTotal from "./CartTotal";
 import PostOrder from "./PostOrder";
 import Loader from "../Utilites/Loader";
 import CartEmpty from "./Empty";
-import { setCart } from "../../store/slices/cartSlice";
-//  todo fix cart state.
 const UserCart = () => {
   const cartState = useSelector((state) => state.cartReducer);
   const [loading, setLoading] = useState(true);
@@ -29,15 +27,17 @@ const UserCart = () => {
         })
         .catch((e) => console.log(e))
         .finally(() => setLoading(false));
-    setLoading(false)
-    setIscartEmpty(true);
-  }, []);
+    else {
+      setLoading(false);
+      setIscartEmpty(true);
+    }
+  }, [cartState]);
 
   return (
     <MComponents.Container maxWidth="lg" sx={{ p: 1, my: 2 }}>
       <MComponents.Paper sx={{ p: 1 }} elevation={10}>
         {loading && <Loader />}
-        {isCartempty && <CartEmpty />}
+        {(isCartempty || !cartState.carts_products) && <CartEmpty />}
         {!loading && cart && !isCartempty && (
           <MComponents.Grid container>
             <MComponents.Grid
