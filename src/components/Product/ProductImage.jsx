@@ -1,26 +1,16 @@
-import { useState } from "react";
-import { Colors, MComponents } from "../MUIExporter";
+import Tilt from "react-parallax-tilt";
 const ProductImage = (props) => {
-  const [isLoading, setLoading] = useState(true);
-  return (
-    <div className="col">
-      {isLoading && (
-        <MComponents.Skeleton
-          variant="rectangular"
-          animation="pulse"
-          height="240"
-          width="100"
-          sx={{ bgcolor: Colors.grey[900] }}
-        />
-      )}
-      <img
-        onLoad={() => {
-          setLoading(false);
-        }}
-        src={props.image}
-        alt="Product logo"
-      />
-    </div>
-  );
+	return (
+		<Tilt>
+			<img
+				src={props.image}
+				style={{
+					objectFit: "contain",
+				}}
+				height="300px"
+				width="400px"
+			/>
+		</Tilt>
+	);
 };
 export default ProductImage;

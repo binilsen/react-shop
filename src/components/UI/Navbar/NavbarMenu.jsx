@@ -6,7 +6,7 @@ import { setStatus } from "../../../store/slices/statusSlice";
 import { onLogout } from "../../../store/slices/authSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
-import styles from "./Navbar.module.css";
+import ProductSearch from "./ProductSearch";
 const NavbarMenu = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.authReducer);
@@ -25,6 +25,7 @@ const NavbarMenu = () => {
   };
   return (
     <>
+      <ProductSearch/>
       <NavItem to="/" title="Home">
         <Icons.Home />
       </NavItem>

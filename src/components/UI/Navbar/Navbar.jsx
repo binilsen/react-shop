@@ -8,7 +8,6 @@ const Navbar = () => {
   const navToggler = () => {
     setIsMobile((prevState) => !prevState);
   };
-  // const isLoginValid = localStorage.getItem("login_valid");
   return (
     <MComponents.AppBar
       sx={{ bgcolor: "primary.main", py: 1 }}

@@ -20,7 +20,7 @@ const EditAddress = (props) => {
     formState: { errors },
     control,
     setValue,
-  } = useForm();
+  } = useForm({mode:'onChange'});
   const formHandler = (data) => {
     const axiosData = {
       address: {

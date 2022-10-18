@@ -2,7 +2,6 @@ import { Icons, MComponents } from "../MUIExporter";
 import { useState } from "react";
 import PanelAccount from "./Panel/PanelAccount";
 import { TabPanel, a11yProps } from "../Utilites/TabPanel";
-import styles from "./Profile.module.css";
 import PanelOrders from "./Panel/PanelOrders";
 import PanelHelp from "./Panel/PanelHelp";
 const Profile = () => {
@@ -12,7 +11,7 @@ const Profile = () => {
   };
 
   return (
-    <div className={styles["user-central"]}>
+    <div>
       <MComponents.Typography
         variant="h5"
         align="center"
