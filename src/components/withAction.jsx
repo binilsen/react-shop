@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setStatus } from "../store/slices/statusSlice";
@@ -6,6 +7,7 @@ const withAction = (Component) => {
   const Wrapper = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const cookies = Cookies.get('rails-token');
     const defaultServerError = () => {
       dispatch(setStatus({}));
     };
@@ -21,6 +23,7 @@ const withAction = (Component) => {
         navigate={navigate}
         defaultServerError={defaultServerError}
         authState={authState}
+        cookies={cookies}
         cartProducts={cartProducts}
         {...props}
       />

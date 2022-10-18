@@ -12,19 +12,23 @@ import ProcessCart from "./Cart/ProcessCart";
 import OrderSuccess from "./Cart/OrderSuccess";
 import EditAddress from "./User/Address/EditAddress";
 import AddAddress from "./User/Address/AddAddress";
+import Order from "../components/User/Order/Order";
+import ProductDetails from "../components/Product/ProductDetails";
 export {
-  AuthFilter,
-  Header,
-  StatusBar,
-  User,
-  Profile,
-  CategoryBar,
-  Footer,
-  Home,
-  UserCart,
-  Category,
-  ProcessCart,
-  OrderSuccess,
-  EditAddress,
-  AddAddress,
+	AuthFilter,
+	Header,
+	StatusBar,
+	User,
+	Profile,
+	CategoryBar,
+	Footer,
+	Home,
+	UserCart,
+	Category,
+	ProcessCart,
+	OrderSuccess,
+	EditAddress,
+	AddAddress,
+	Order,
+	ProductDetails,
 };
